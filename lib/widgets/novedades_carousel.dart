@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_store_flutter/database/conexion.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -12,73 +13,63 @@ class NovedadesCarousel extends StatefulWidget {
 }
 
 class _NovedadesCarousel extends State<NovedadesCarousel> {
-  int activeIndex = 0;
+  Future<List<List<dynamic>>> selectDatos() async {
+    return await Conexion.connection.query("SELECT * FROM novedades");
+  }
 
-  final prodNames = ["JCL-750SQ", "360 C", "A40", "JPO42"];
-  final brandNames = ["JUPITER", "HOHNER", "CORE", "JOHN PACKER"];
-  final categories = [
-    "Clarinetes",
-    "Armónicas",
-    "Contrabajos",
-    "Saxofones tenor"
-  ];
-  final prices = [999, 20, 1999, 599];
-  final descriptions = [
-    "Clave Sib, cuerpo y campana en madera de granadillo, llaves plateadas ergonómicas...",
-    "Harmonica con cositas street afinada en C do",
-    "Contrabaix double bass lorem ipsum jejaj jejej lbla",
-    "Saxofonaco con cosas de plata y cositas blablabla"
-  ];
-  final images = [
-    "https://storage.googleapis.com/music-store-flutter/Clarinet/clarinet.png",
-    "https://storage.googleapis.com/music-store-flutter/Harmonica/harmonica.png",
-    "https://storage.googleapis.com/music-store-flutter/Contrabass/contrabass3.png",
-    "https://storage.googleapis.com/music-store-flutter/TenorSax/tenor%20sax2.png"
-  ];
+  int activeIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 25.0),
-          child:
-              Align(alignment: Alignment.centerLeft, child: Text("Novedades")),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        CarouselSlider.builder(
-          options: CarouselOptions(
-            height: 260,
-            viewportFraction: 1,
-            onPageChanged: (index, reason) =>
-                setState(() => activeIndex = index),
-          ),
-          itemCount: 4,
-          itemBuilder: (context, index, realIndex) {
-            final String prod = prodNames[index];
-            final String brand = brandNames[index];
-            final String categor = categories[index];
-            final int price = prices[index];
-            final String descrip = descriptions[index];
-            final String img = images[index];
-
-            return mostrarContenedor(prod, brand, categor, price, descrip, img);
-          },
-        ),
-        const SizedBox(
-          height: 9,
-        ),
-        Center(
-          child: mostrarIndicador(),
-        )
-      ],
-    );
+    return FutureBuilder<List<List<dynamic>>>(
+        future: selectDatos(),
+        builder: (context, AsyncSnapshot resultados) {
+          if (resultados.hasData) {
+            return Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 25.0),
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Novedades")),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                CarouselSlider.builder(
+                    options: CarouselOptions(
+                      height: 260,
+                      viewportFraction: 1,
+                      onPageChanged: (index, reason) =>
+                          setState(() => activeIndex = index),
+                    ),
+                    itemCount: resultados.data.length,
+                    itemBuilder:
+                        (BuildContext context, int index, int realIndex) {
+                      return mostrarContenedor(
+                          resultados.data[index][1],
+                          resultados.data[index][2],
+                          resultados.data[index][5],
+                          resultados.data[index][4],
+                          resultados.data[index][3],
+                          resultados.data[index][7]);
+                    }),
+                const SizedBox(
+                  height: 9,
+                ),
+                Center(
+                  child: mostrarIndicador(),
+                )
+              ],
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 
-  Widget mostrarContenedor(String prods, String brandNames, String categor,
-          int price, String descrip, String img) =>
+  Widget mostrarContenedor(String prodName, String brandName,
+          String categoryName, double price, String description, String img) =>
       Card(
         shadowColor: const Color.fromRGBO(0, 0, 0, 0.15),
         child: Container(
@@ -108,7 +99,7 @@ class _NovedadesCarousel extends State<NovedadesCarousel> {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        categor,
+                        categoryName,
                         style: const TextStyle(
                             color: Color(0xFF736F6F),
                             fontWeight: FontWeight.bold,
@@ -120,12 +111,12 @@ class _NovedadesCarousel extends State<NovedadesCarousel> {
               ),
               const SizedBox(width: 10),
               Padding(
-                padding: const EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.only(top: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      brandNames,
+                      brandName.toUpperCase(),
                       style: const TextStyle(
                           color: Color(0XFF3E3C3C),
                           fontWeight: FontWeight.w900,
@@ -134,7 +125,7 @@ class _NovedadesCarousel extends State<NovedadesCarousel> {
                     Padding(
                       padding: const EdgeInsets.only(left: 2.0),
                       child: Text(
-                        prods,
+                        prodName,
                         style: const TextStyle(
                             color: Color(0xFF736F6F),
                             fontWeight: FontWeight.bold,
@@ -146,9 +137,12 @@ class _NovedadesCarousel extends State<NovedadesCarousel> {
                     ),
                     SizedBox(
                       width: 190,
+                      height: 80,
                       child: Text(
-                        descrip,
+                        description,
                         textAlign: TextAlign.start,
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                             color: Color(0xFF736F6F),
                             fontWeight: FontWeight.bold,
@@ -159,7 +153,7 @@ class _NovedadesCarousel extends State<NovedadesCarousel> {
                       height: 30,
                     ),
                     Text(
-                      price.toString() + "€",
+                      '$price €',
                       style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 25,
@@ -173,14 +167,22 @@ class _NovedadesCarousel extends State<NovedadesCarousel> {
         ),
       );
 
-  Widget mostrarIndicador() => AnimatedSmoothIndicator(
-        activeIndex: activeIndex,
-        count: 4,
-        effect: const WormEffect(
-            dotHeight: 10,
-            dotWidth: 10,
-            spacing: 4,
-            activeDotColor: Color(0xFF303030),
-            dotColor: Color(0xFFC4C4C4)),
-      );
+  Widget mostrarIndicador() => FutureBuilder<List<List<dynamic>>>(
+      future: selectDatos(),
+      builder: (context, AsyncSnapshot resultados) {
+        if (resultados.hasData) {
+          return AnimatedSmoothIndicator(
+            activeIndex: activeIndex,
+            count: resultados.data.length,
+            effect: const WormEffect(
+                dotHeight: 10,
+                dotWidth: 10,
+                spacing: 4,
+                activeDotColor: Color(0xFF303030),
+                dotColor: Color(0xFFC4C4C4)),
+          );
+        } else {
+          return Container();
+        }
+      });
 }

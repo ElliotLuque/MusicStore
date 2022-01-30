@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_store_flutter/database/conexion.dart';
 
 class OfertasProductoLista extends StatefulWidget {
   const OfertasProductoLista({
@@ -10,13 +11,11 @@ class OfertasProductoLista extends StatefulWidget {
 }
 
 class _OfertasProductoLista extends State<OfertasProductoLista> {
-  final imagen = Image.network(
-      "https://storage.googleapis.com/music-store-flutter/TenorSax/tenor%20sax2.png");
+  List<List<dynamic>> resultados = [];
 
-  @override
-  void didChangeDependencies() {
-    precacheImage(imagen.image, context);
-    super.didChangeDependencies();
+  Future<void> selectDatos() async {
+    resultados = await Conexion.connection.query("SELECT * FROM producto");
+    setState(() {});
   }
 
   @override
@@ -46,7 +45,7 @@ class _OfertasProductoLista extends State<OfertasProductoLista> {
               itemCount: 4,
               itemBuilder: (BuildContext context, int index) {
                 return productoCard(
-                  imagen,
+                  "https://storage.googleapis.com/music-store-flutter/Instrument_images/TenorSax/tenor_sax_01.png",
                   "YTS-480",
                   "Yamaha",
                   559,
@@ -65,7 +64,7 @@ class _OfertasProductoLista extends State<OfertasProductoLista> {
     );
   }
 
-  Widget productoCard(Image img, String prodName, String brandName, int price,
+  Widget productoCard(String img, String prodName, String brandName, int price,
           int rating) =>
       Card(
         shadowColor: const Color.fromRGBO(0, 0, 0, 0.15),
@@ -84,7 +83,8 @@ class _OfertasProductoLista extends State<OfertasProductoLista> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
-                  child: SizedBox(height: 175, width: 135, child: img),
+                  child: SizedBox(
+                      height: 175, width: 135, child: Image.network(img)),
                 ),
                 const SizedBox(
                   height: 17,

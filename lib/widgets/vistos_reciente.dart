@@ -33,7 +33,7 @@ class _VistosRecientementeState extends State<VistosRecientemente> {
             itemCount: 4,
             itemBuilder: (BuildContext context, int index) {
               return productoVisto(
-                  "https://storage.googleapis.com/music-store-flutter/Contrabass/contrabass3.png");
+                  "https://storage.googleapis.com/music-store-flutter/Category_images/viento_madera.png");
             },
           ),
         ),

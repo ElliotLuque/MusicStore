@@ -45,7 +45,7 @@ class _ProductosRandomListaState extends State<ProductosRandomLista> {
               itemCount: 5,
               itemBuilder: (BuildContext context, int index) {
                 return productoCard(
-                    "https://storage.googleapis.com/music-store-flutter/Contrabass/contrabass3.png",
+                    "https://storage.googleapis.com/music-store-flutter/Instrument_images/Contrabajo/contrabass_01.png",
                     "Bussetto IB",
                     "Scala Vilagio",
                     4969,

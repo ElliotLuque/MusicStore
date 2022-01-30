@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'views/main_page.dart';
+import 'package:music_store_flutter/views/main_page.dart';
 import 'package:flutter/services.dart';
+import 'package:music_store_flutter/database/conexion.dart';
 
-void main() {
+void main() async {
+  await Conexion().conectar();
   runApp(const MyApp());
 }
 

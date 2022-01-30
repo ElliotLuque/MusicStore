@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_store_flutter/database/conexion.dart';
 
 class CategoriasLista extends StatefulWidget {
   const CategoriasLista({Key? key}) : super(key: key);
@@ -8,56 +9,56 @@ class CategoriasLista extends StatefulWidget {
 }
 
 class _CategoriasListaState extends State<CategoriasLista> {
+  Future<List<List<dynamic>>> selectDatos() async {
+    return await Conexion.connection.query("SELECT * FROM categorias");
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25.0),
-      child: Column(
-        children: [
-          Row(
-            children: const [
-              Text("Categorías"),
-              Spacer(),
-              Padding(
-                padding: EdgeInsets.only(right: 25.0),
-                child: Text(
-                  "MÁS",
-                  style: TextStyle(
-                      fontSize: 17,
-                      color: Color(0xFF736F6F),
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold),
-                ),
+    return FutureBuilder<List<List<dynamic>>>(
+        future: selectDatos(),
+        builder: (context, AsyncSnapshot resultados) {
+          if (resultados.hasData) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: const [
+                      Text("Categorías"),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    height: 128,
+                    child: ListView.separated(
+                      physics: const BouncingScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics()),
+                      clipBehavior: Clip.none,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: resultados.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return categoriaCard(
+                          resultados.data[index][2],
+                          resultados.data[index][1],
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(
+                          width: 7,
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            height: 128,
-            child: ListView.separated(
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              clipBehavior: Clip.none,
-              scrollDirection: Axis.horizontal,
-              itemCount: 4,
-              itemBuilder: (BuildContext context, int index) {
-                return categoriaCard(
-                  "https://storage.googleapis.com/music-store-flutter/TenorSax/tenor%20sax2.png",
-                  "Viento Metal",
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  width: 7,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 
   Widget categoriaCard(String img, String categoriaName) => Card(
