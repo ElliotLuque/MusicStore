@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:music_store_flutter/database/conexion.dart';
 
@@ -20,7 +21,7 @@ class _CategoriasListaState extends State<CategoriasLista> {
         builder: (context, AsyncSnapshot resultados) {
           if (resultados.hasData) {
             return Padding(
-              padding: const EdgeInsets.only(left: 25.0),
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Column(
                 children: [
                   Row(
@@ -78,7 +79,11 @@ class _CategoriasListaState extends State<CategoriasLista> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: SizedBox(height: 79, child: Image.network(img)),
+                child: SizedBox(
+                    height: 79,
+                    child: CachedNetworkImage(
+                      imageUrl: img,
+                    )),
               ),
               Text(categoriaName,
                   style: const TextStyle(

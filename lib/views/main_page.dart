@@ -81,15 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 SizedBox(
                   height: 37,
                 ),
-                ProductosRandomLista(
-                  categoria: "Contrabajos",
-                ),
+                ProductosRandomLista(),
                 SizedBox(
                   height: 37,
                 ),
-                ProductosRandomLista(
-                  categoria: "Saxofones tenor",
-                ),
+                ProductosRandomLista(),
                 SizedBox(
                   height: 37,
                 ),

@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:music_store_flutter/database/conexion.dart';
 
 class VistosRecientemente extends StatefulWidget {
   const VistosRecientemente({Key? key}) : super(key: key);
@@ -8,46 +10,63 @@ class VistosRecientemente extends StatefulWidget {
 }
 
 class _VistosRecientementeState extends State<VistosRecientemente> {
+  Future<List<List<dynamic>>> selectDatos() async {
+    return await Conexion.connection.query(
+        ''' SELECT DISTINCT ON (imagenes_producto.id_producto) producto.id_producto, imagen
+FROM historial_producto
+INNER JOIN producto USING (id_producto)
+INNER JOIN imagenes_producto USING (id_producto)
+''');
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 25.0),
-          child: Row(
-            children: const [
-              Text("Vistos recientmente"),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 530,
-          width: 328,
-          child: GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200,
-                childAspectRatio: 1.8 / 2.7,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20),
-            itemCount: 4,
-            itemBuilder: (BuildContext context, int index) {
-              return productoVisto(
-                  "https://storage.googleapis.com/music-store-flutter/Category_images/viento_madera.png");
-            },
-          ),
-        ),
-        const Text(
-          "Más artículos",
-          style: TextStyle(
-              fontSize: 13,
-              color: Color(0xFF736F6F),
-              decoration: TextDecoration.underline,
-              fontStyle: FontStyle.italic,
-              fontWeight: FontWeight.bold),
-        )
-      ],
-    );
+    return FutureBuilder<List<List<dynamic>>>(
+        future: selectDatos(),
+        builder: (context, AsyncSnapshot resultados) {
+          if (resultados.hasData) {
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: Row(
+                    children: const [
+                      Text("Vistos recientemente"),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 530,
+                  width: 328,
+                  child: GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 1.8 / 2.7,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: resultados.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return productoVisto(resultados.data[index][1]);
+                    },
+                  ),
+                ),
+                const Text(
+                  "Más artículos",
+                  style: TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF736F6F),
+                      decoration: TextDecoration.underline,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold),
+                )
+              ],
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 
   Widget productoVisto(String img) => Card(
@@ -66,7 +85,11 @@ class _VistosRecientementeState extends State<VistosRecientemente> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(15.0),
-                child: SizedBox(height: 185, child: Image.network(img)),
+                child: SizedBox(
+                    height: 185,
+                    child: CachedNetworkImage(
+                      imageUrl: img,
+                    )),
               ),
             ],
           ),

@@ -1,70 +1,103 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:music_store_flutter/database/conexion.dart';
 
 class ProductosRandomLista extends StatefulWidget {
-  final String categoria;
-
-  const ProductosRandomLista({Key? key, required this.categoria})
-      : super(key: key);
+  const ProductosRandomLista({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ProductosRandomLista> createState() => _ProductosRandomListaState();
 }
 
 class _ProductosRandomListaState extends State<ProductosRandomLista> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(widget.categoria),
-              const Spacer(),
-              const Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: Text(
-                  "MÁS",
-                  style: TextStyle(
-                      fontSize: 17,
-                      color: Color(0xFF736F6F),
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 248,
-            child: ListView.separated(
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              clipBehavior: Clip.none,
-              scrollDirection: Axis.horizontal,
-              itemCount: 5,
-              itemBuilder: (BuildContext context, int index) {
-                return productoCard(
-                    "https://storage.googleapis.com/music-store-flutter/Instrument_images/Contrabajo/contrabass_01.png",
-                    "Bussetto IB",
-                    "Scala Vilagio",
-                    4969,
-                    4);
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  width: 12,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+  Future<List<List<dynamic>>> categoriaRand() async {
+    return await Conexion.connection.query(
+        "SELECT id_categoria, nombre FROM subcategorias ORDER BY RANDOM() LIMIT 1");
   }
 
-  Widget productoCard(String img, String prodName, String brandName, int price,
-          int rating) =>
+  Future<List<List<dynamic>>> selectDatos() async {
+    List<List<dynamic>> idCatRandom = await categoriaRand();
+    return await Conexion.connection.query(
+        "SELECT * FROM producto_extendido WHERE categoria = @cat",
+        substitutionValues: {"cat": idCatRandom[0][0]});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<List<dynamic>>>(
+        future: selectDatos(),
+        builder: (context, AsyncSnapshot resultados) {
+          if (resultados.hasData && resultados.data.length > 0) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(resultados.data[0][6]),
+                      const Spacer(),
+                      const Padding(
+                        padding: EdgeInsets.only(right: 20.0),
+                        child: Text(
+                          "MÁS",
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Color(0xFF736F6F),
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 248,
+                    child: ListView.separated(
+                      physics: const BouncingScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics()),
+                      clipBehavior: Clip.none,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: resultados.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return productoCard(
+                            resultados.data[index][8],
+                            resultados.data[index][1],
+                            resultados.data[index][2],
+                            resultados.data[index][4],
+                            resultados.data[index][7]);
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(
+                          width: 12,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const Padding(
+              padding: EdgeInsets.only(top: 13.0),
+              child: Center(
+                child: Text(
+                  "Aún no tenemos productos de esta categoría :(",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF736F6F)),
+                ),
+              ),
+            );
+          }
+        });
+  }
+
+  Widget productoCard(String img, String prodName, String brandName,
+          double price, double rating) =>
       Card(
         shadowColor: const Color.fromRGBO(0, 0, 0, 0.15),
         child: Container(
@@ -83,12 +116,11 @@ class _ProductosRandomListaState extends State<ProductosRandomLista> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: SizedBox(
-                    height: 145,
-                    width: 125,
-                    child: Image.network(
-                      img,
-                    ),
-                  ),
+                      height: 145,
+                      width: 125,
+                      child: CachedNetworkImage(
+                        imageUrl: img,
+                      )),
                 ),
                 const SizedBox(
                   height: 17,
@@ -129,35 +161,35 @@ class _ProductosRandomListaState extends State<ProductosRandomLista> {
                         children: [
                           Icon(
                             Icons.star,
-                            color: (rating >= 1
+                            color: (rating.round() >= 1
                                 ? const Color(0xFFFFD363)
                                 : const Color(0xFFACA9A9)),
                             size: 12,
                           ),
                           Icon(
                             Icons.star,
-                            color: (rating >= 2
+                            color: (rating.round() >= 2
                                 ? const Color(0xFFFFD363)
                                 : const Color(0xFFACA9A9)),
                             size: 12,
                           ),
                           Icon(
                             Icons.star,
-                            color: (rating >= 3
+                            color: (rating.round() >= 3
                                 ? const Color(0xFFFFD363)
                                 : const Color(0xFFACA9A9)),
                             size: 12,
                           ),
                           Icon(
                             Icons.star,
-                            color: (rating >= 4
+                            color: (rating.round() >= 4
                                 ? const Color(0xFFFFD363)
                                 : const Color(0xFFACA9A9)),
                             size: 12,
                           ),
                           Icon(
                             Icons.star,
-                            color: (rating == 5
+                            color: (rating.round() == 5
                                 ? const Color(0xFFFFD363)
                                 : const Color(0xFFACA9A9)),
                             size: 12,
@@ -173,7 +205,9 @@ class _ProductosRandomListaState extends State<ProductosRandomLista> {
                           borderRadius: BorderRadius.circular(25),
                         ),
                         child: Text(
-                          '$price €',
+                          price % 1 == 0
+                              ? price.round().toString() + ' €'
+                              : '$price €',
                           style: const TextStyle(
                               fontWeight: FontWeight.w900,
                               color: Color(0xFF363636),

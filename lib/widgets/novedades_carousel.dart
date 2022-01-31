@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:music_store_flutter/database/conexion.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -93,7 +94,9 @@ class _NovedadesCarousel extends State<NovedadesCarousel> {
                       child: SizedBox(
                         width: 145,
                         height: 200,
-                        child: Image.network(img),
+                        child: CachedNetworkImage(
+                          imageUrl: img,
+                        ),
                       ),
                     ),
                     Padding(
@@ -153,7 +156,9 @@ class _NovedadesCarousel extends State<NovedadesCarousel> {
                       height: 30,
                     ),
                     Text(
-                      '$price €',
+                      price % 1 == 0
+                          ? price.round().toString() + ' €'
+                          : '$price €',
                       style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 25,
