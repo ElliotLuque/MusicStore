@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:music_store_flutter/views/main_page.dart';
 import 'package:flutter/services.dart';
 import 'package:music_store_flutter/database/conexion.dart';
+import 'package:music_store_flutter/views/product_page.dart';
 
 void main() async {
   await Conexion().conectar();
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
         systemNavigationBarIconBrightness: Brightness.dark));
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Music Store',
       theme: ThemeData(
           primaryColor: const Color(0xFF9272D6),
@@ -27,7 +29,11 @@ class MyApp extends StatelessWidget {
               backgroundColor: Color(0xFFFBF8F8),
               selectedItemColor: Color(0xFF9272D6),
               unselectedItemColor: Color(0xFFC4C4C4))),
-      home: const MyHomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomePage(),
+        ProductPage.route: (context) => ProductPage(),
+      },
     );
   }
 }

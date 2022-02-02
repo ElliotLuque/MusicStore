@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:music_store_flutter/widgets/categorias_lista.dart';
 import 'package:music_store_flutter/widgets/novedades_carousel.dart';
 import 'package:music_store_flutter/widgets/oferta_producto_lista.dart';
 import 'package:music_store_flutter/widgets/productos_random_lista.dart';
 import 'package:music_store_flutter/widgets/vistos_reciente.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   int selectedIndexNavBar = 0;
 
   void onNavBarItemTapped(int index) {
@@ -23,6 +24,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarColor: Color(0xFFFBF8F8),
+        systemNavigationBarIconBrightness: Brightness.dark));
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -91,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 VistosRecientemente(),
                 SizedBox(
-                  height: 37,
+                  height: 23,
                 )
               ],
             ),

@@ -53,7 +53,7 @@ INNER JOIN imagenes_producto USING (id_producto)
                   ),
                 ),
                 const Text(
-                  "Más artículos",
+                  "Historial de productos",
                   style: TextStyle(
                       fontSize: 13,
                       color: Color(0xFF736F6F),
