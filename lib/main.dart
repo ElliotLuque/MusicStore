@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:music_store_flutter/views/login_page.dart';
 import 'package:music_store_flutter/views/main_page.dart';
 import 'package:flutter/services.dart';
 import 'package:music_store_flutter/database/conexion.dart';
 import 'package:music_store_flutter/views/product_page.dart';
+import 'package:music_store_flutter/views/register_page.dart';
 
 void main() async {
   await Conexion().conectar();
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        systemNavigationBarColor: Color(0xFFFBF8F8),
+        systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark));
 
     return MaterialApp(
@@ -29,10 +31,12 @@ class MyApp extends StatelessWidget {
               backgroundColor: Color(0xFFFBF8F8),
               selectedItemColor: Color(0xFF9272D6),
               unselectedItemColor: Color(0xFFC4C4C4))),
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => const HomePage(),
-        ProductPage.route: (context) => ProductPage(),
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+        '/home': (context) => const HomePage(),
+        ProductPage.route: (context) => const ProductPage(),
       },
     );
   }

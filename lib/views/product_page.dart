@@ -7,7 +7,7 @@ import 'package:music_store_flutter/database/conexion.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductPage extends StatefulWidget {
-  ProductPage({Key? key}) : super(key: key);
+  const ProductPage({Key? key}) : super(key: key);
 
   static const String route = '/product_page';
 
