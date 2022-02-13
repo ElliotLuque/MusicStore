@@ -79,6 +79,8 @@ flutter:
       - assets/arrow-small-left_gray.png
       - assets/arrow-right.png
       - assets/login_background.png
+      - assets/cancel.png
+      - assets/check.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

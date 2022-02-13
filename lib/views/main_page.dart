@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:music_store_flutter/controller/secure_storage.dart';
 import 'package:music_store_flutter/widgets/categorias_lista.dart';
 import 'package:music_store_flutter/widgets/novedades_carousel.dart';
 import 'package:music_store_flutter/widgets/oferta_producto_lista.dart';
@@ -14,6 +15,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  UserData data = UserData();
+
   int selectedIndexNavBar = 0;
 
   void onNavBarItemTapped(int index) {
@@ -74,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                 fontWeight: FontWeight.w700,
               ),
               child: Column(
-                children: const [
+                children: [
                   OfertasProductoLista(),
                   SizedBox(
                     height: 37,
@@ -98,7 +101,20 @@ class _HomePageState extends State<HomePage> {
                   VistosRecientemente(),
                   SizedBox(
                     height: 23,
-                  )
+                  ),
+                  FutureBuilder<String?>(
+                      future: data.getData("username"),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        return GestureDetector(
+                          onTap: () =>
+                              {data.deleteData("username"), print("yee")},
+                          child: Container(
+                            height: 200,
+                            color: Colors.amber,
+                            child: Text(snapshot.data.toString()),
+                          ),
+                        );
+                      })
                 ],
               ),
             ),

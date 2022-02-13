@@ -2,6 +2,10 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:music_store_flutter/controller/secure_storage.dart';
+import 'package:music_store_flutter/database/conexion.dart';
+import 'package:music_store_flutter/widgets/dialog_message.dart';
 import 'package:music_store_flutter/widgets/login/action_button.dart';
 import 'package:music_store_flutter/widgets/login/form_field.dart';
 
@@ -13,20 +17,68 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String user = "";
-  String pass = "";
+  UserData data = UserData();
+  final formKey = GlobalKey<FormState>();
 
   TextEditingController userController = TextEditingController();
   TextEditingController passController = TextEditingController();
 
-  final formKey = GlobalKey<FormState>();
+  Future<List<List<dynamic>>> selectUserData(String nombre, String pass) async {
+    return await Conexion.connection.query(
+        '''SELECT id_usuario, nombre, email, pass
+                                              FROM usuario
+                                              WHERE nombre = @nombre
+                                              AND pass = @pass;''',
+        substitutionValues: {"nombre": nombre, "pass": pass});
+  }
 
-  void loginAction() {
-    var bytes = utf8.encode(userController.text);
-    var passCrypted = sha256.convert(bytes);
+  Future<bool> checkLogin() async {
+    List<List> list = await selectUserData(
+        userController.text, encryptPass(passController.text));
+    if (list.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  String encryptPass(String pass) {
+    var bytes = utf8.encode(pass);
+    var passCrypted = sha256.convert(bytes).toString();
+    return passCrypted;
+  }
+
+  void saveData(String id, String user, String password) {
+    data.setData("id", id);
+    data.setData("username", user);
+    data.setData("password", password);
+  }
+
+  void loginAction(BuildContext context) async {
+    String password = encryptPass(passController.text);
+    String username = userController.text;
 
     if (formKey.currentState!.validate()) {
-      Navigator.pushNamed(context, '/home');
+      bool checked = await checkLogin();
+      if (checked) {
+        List<List> list = await selectUserData(username, password);
+        String id = "";
+        if (list.isNotEmpty) {
+          id = list[0][0].toString();
+        }
+
+        saveData(id, userController.text, password);
+        Navigator.pushNamed(context, '/home');
+      } else {
+        showAnimatedDialog(
+            context: context,
+            barrierDismissible: true,
+            animationType: DialogTransitionType.scale,
+            builder: (context) => const DialogMensajeIcon(
+                  text: "Usuario o contraseña incorrectos",
+                  image: 'assets/cancel.png',
+                  navOption: 1,
+                ));
+      }
     }
   }
 
@@ -106,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
-                          onTap: () => {loginAction()},
+                          onTap: () => {loginAction(context)},
                           child: const ActionButton(
                             text: "ENTRAR",
                             widthBtn: 135,

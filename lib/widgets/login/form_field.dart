@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:music_store_flutter/database/conexion.dart';
 
 class FormFieldLogin extends StatefulWidget {
   final double heightField;
@@ -28,6 +29,14 @@ class FormFieldLogin extends StatefulWidget {
 }
 
 class _FormFieldLoginState extends State<FormFieldLogin> {
+  Future<List<List<dynamic>>> selectUserData(String nombre, String pass) async {
+    return await Conexion.connection.query('''SELECT id_usuario, email
+                                              FROM usuario
+                                              WHERE nombre = @nombre
+                                              AND pass = @pass;''',
+        substitutionValues: {"nombre": nombre, "pass": pass});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,6 +67,15 @@ class _FormFieldLoginState extends State<FormFieldLogin> {
                   return widget.textoError;
                 }
               }
+
+              if (widget.texto == "TELÉFONO (OPCIONAL)") {
+                if (value != null && value.isNotEmpty) {
+                  if (!value.contains(RegExp(r'^[0-9]*$'))) {
+                    return widget.textoError;
+                  }
+                }
+              }
+
               if (widget.texto == "CORREO ELECTRÓNICO") {
                 if (value == null || value.isEmpty || !value.contains("@")) {
                   return widget.textoError;

@@ -52,15 +52,6 @@ INNER JOIN imagenes_producto USING (id_producto)
                     },
                   ),
                 ),
-                const Text(
-                  "Historial de productos",
-                  style: TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF736F6F),
-                      decoration: TextDecoration.underline,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.bold),
-                )
               ],
             );
           } else {

@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:music_store_flutter/database/conexion.dart';
+import 'package:music_store_flutter/widgets/dialog_message.dart';
 import 'package:music_store_flutter/widgets/login/action_button.dart';
 import 'package:music_store_flutter/widgets/login/form_field.dart';
 
@@ -49,7 +50,11 @@ class _RegisterPageState extends State<RegisterPage> {
           barrierDismissible: true,
           animationType: DialogTransitionType.scale,
           builder: (BuildContext context) {
-            return mensajeConfirmacion();
+            return const DialogMensajeIcon(
+              text: "Usuario registrado correctamente!",
+              image: 'assets/check.png',
+              navOption: 2,
+            );
           });
     }
   }
@@ -176,52 +181,4 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ));
   }
-
-  Widget mensajeConfirmacion() => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-              color: const Color(0xFFFEFCFE),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: const [
-                BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.15),
-                    offset: Offset(3, 3),
-                    blurRadius: 4.0)
-              ]),
-          height: 190,
-          width: 100,
-          child: Column(children: [
-            const Text(
-              "CUENTA CREADA!",
-              style: TextStyle(fontSize: 14),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              "Usuario registrado correctamente!",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 17),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            GestureDetector(
-              onTap: () =>
-                  {Navigator.popUntil(context, ModalRoute.withName('/login'))},
-              child: const Text(
-                "Aceptar",
-                style: TextStyle(
-                    color: Color(0xFF9E7EE2),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16),
-              ),
-            )
-          ]),
-        ),
-      );
 }

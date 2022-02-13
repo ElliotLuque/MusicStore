@@ -47,3 +47,4 @@ app.*.map.json
 
 # Custom
 /lib/database/conexion.dart
+lib/controller/secure_storage.dart
