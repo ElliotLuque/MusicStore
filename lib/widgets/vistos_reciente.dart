@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:music_store_flutter/controller/secure_storage.dart';
 import 'package:music_store_flutter/database/conexion.dart';
 
 class VistosRecientemente extends StatefulWidget {
@@ -10,13 +11,18 @@ class VistosRecientemente extends StatefulWidget {
 }
 
 class _VistosRecientementeState extends State<VistosRecientemente> {
+  UserData data = UserData();
+
   Future<List<List<dynamic>>> selectDatos() async {
     return await Conexion.connection.query(
-        ''' SELECT DISTINCT ON (imagenes_producto.id_producto) producto.id_producto, imagen
-            FROM historial_producto
-            INNER JOIN producto USING (id_producto)
-            INNER JOIN imagenes_producto USING (id_producto)
-            ''');
+        ''' SELECT DISTINCT ON (producto.id_producto) producto.id_producto,imagen,fecha_vista
+FROM producto
+	RIGHT JOIN imagenes_producto USING (id_producto)
+	LEFT JOIN historial_producto USING (id_producto)
+WHERE historial_producto.id_usuario = @user
+GROUP BY producto.id_producto, producto.nombre, producto.fabricante, producto.descripcion, fecha_vista, producto.precio_actual, imagenes_producto.imagen, imagenes_producto.id_imagen
+LIMIT 4;''',
+        substitutionValues: {"user": await data.getData("id")});
   }
 
   @override
