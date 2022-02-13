@@ -15,8 +15,9 @@ class ProductosRandomLista extends StatefulWidget {
 
 class _ProductosRandomListaState extends State<ProductosRandomLista> {
   Future<List<List<dynamic>>> categoriaRand() async {
-    return await Conexion.connection.query(
-        "SELECT id_categoria, nombre FROM subcategorias ORDER BY RANDOM() LIMIT 1");
+    return await Conexion.connection.query('''SELECT id_categoria, nombre 
+                                              FROM subcategorias 
+                                              ORDER BY RANDOM() LIMIT 1''');
   }
 
   Future<List<List<dynamic>>> selectDatos() async {

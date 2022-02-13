@@ -31,9 +31,8 @@ class _MyAppState extends State<MyApp> {
 
     return FutureBuilder<bool>(
         future: data.hasData(),
-        builder: (context, AsyncSnapshot snapshot) {
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == true) {
-            print("ye");
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Music Store',

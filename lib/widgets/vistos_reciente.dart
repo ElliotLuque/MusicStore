@@ -13,10 +13,10 @@ class _VistosRecientementeState extends State<VistosRecientemente> {
   Future<List<List<dynamic>>> selectDatos() async {
     return await Conexion.connection.query(
         ''' SELECT DISTINCT ON (imagenes_producto.id_producto) producto.id_producto, imagen
-FROM historial_producto
-INNER JOIN producto USING (id_producto)
-INNER JOIN imagenes_producto USING (id_producto)
-''');
+            FROM historial_producto
+            INNER JOIN producto USING (id_producto)
+            INNER JOIN imagenes_producto USING (id_producto)
+            ''');
   }
 
   @override
@@ -25,35 +25,39 @@ INNER JOIN imagenes_producto USING (id_producto)
         future: selectDatos(),
         builder: (context, AsyncSnapshot resultados) {
           if (resultados.hasData) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 25.0),
-                  child: Row(
-                    children: const [
-                      Text("Vistos recientemente"),
-                    ],
+            if (resultados.data.length > 0) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25.0),
+                    child: Row(
+                      children: const [
+                        Text("Vistos recientemente"),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 530,
-                  width: 328,
-                  child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            childAspectRatio: 1.8 / 2.7,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20),
-                    itemCount: resultados.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return productoVisto(resultados.data[index][1]);
-                    },
+                  SizedBox(
+                    height: 530,
+                    width: 328,
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              childAspectRatio: 1.8 / 2.7,
+                              crossAxisSpacing: 20,
+                              mainAxisSpacing: 20),
+                      itemCount: resultados.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return productoVisto(resultados.data[index][1]);
+                      },
+                    ),
                   ),
-                ),
-              ],
-            );
+                ],
+              );
+            } else {
+              return Container();
+            }
           } else {
             return Container();
           }

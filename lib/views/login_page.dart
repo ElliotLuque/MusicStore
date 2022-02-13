@@ -26,9 +26,9 @@ class _LoginPageState extends State<LoginPage> {
   Future<List<List<dynamic>>> selectUserData(String nombre, String pass) async {
     return await Conexion.connection.query(
         '''SELECT id_usuario, nombre, email, pass
-                                              FROM usuario
-                                              WHERE nombre = @nombre
-                                              AND pass = @pass;''',
+           FROM usuario
+           WHERE nombre = @nombre
+           AND pass = @pass;''',
         substitutionValues: {"nombre": nombre, "pass": pass});
   }
 
@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
           id = list[0][0].toString();
         }
 
-        saveData(id, userController.text, password);
+        saveData(id, username, password);
         Navigator.pushNamed(context, '/home');
       } else {
         showAnimatedDialog(

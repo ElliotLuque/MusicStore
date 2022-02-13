@@ -32,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> insertUser() async {
     await Conexion.connection
         .query('''INSERT INTO usuario (id_usuario, nombre, email, telefono, pass)
-    VALUES (DEFAULT, @nombre, @email, @telefono, @pass)''',
+                  VALUES (DEFAULT, @nombre, @email, @telefono, @pass)''',
             substitutionValues: {
           "nombre": newUserController.text,
           "email": newMailController.text,
