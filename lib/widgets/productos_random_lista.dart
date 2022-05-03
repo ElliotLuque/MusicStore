@@ -44,15 +44,18 @@ class _ProductosRandomListaState extends State<ProductosRandomLista> {
                     children: [
                       Text(resultados.data[0][6]),
                       const Spacer(),
-                      const Padding(
-                        padding: EdgeInsets.only(right: 20.0),
-                        child: Text(
-                          "MÁS",
-                          style: TextStyle(
-                              fontSize: 17,
-                              color: Color(0xFF736F6F),
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: GestureDetector(
+                          onTap: () => {},
+                          child: const Text(
+                            "MÁS",
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Color(0xFF736F6F),
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ],

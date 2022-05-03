@@ -46,6 +46,7 @@ dependencies:
   smooth_page_indicator: ^1.0.0+2
   cached_network_image: ^3.2.0
   font_awesome_flutter: ^9.2.0
+  flash: ^2.0.3+2
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +82,7 @@ flutter:
       - assets/login_background.png
       - assets/cancel.png
       - assets/check.png
+      - assets/info.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

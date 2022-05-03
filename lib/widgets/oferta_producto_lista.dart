@@ -39,8 +39,14 @@ class _OfertasProductoLista extends State<OfertasProductoLista> {
                     padding: EdgeInsets.only(left: 5.0),
                     child: Text("Productos en oferta"),
                   ),
+                  /*Container(
+                    margin: const EdgeInsets.all(4.8),
+                    height: 4.5,
+                    width: 230,
+                    color: const Color(0xFFB497F1),
+                  ),*/
                   const SizedBox(
-                    height: 20,
+                    height: 15,
                   ),
                   SizedBox(
                     height: 295,

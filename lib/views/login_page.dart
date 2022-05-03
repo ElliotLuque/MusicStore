@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<List<List<dynamic>>> selectUserData(String nombre, String pass) async {
     return await Conexion.connection.query(
-        '''SELECT id_usuario, nombre, email, pass
+        '''SELECT id_usuario, nombre, email, pass, foto_perfil
            FROM usuario
            WHERE nombre = @nombre
            AND pass = @pass;''',
@@ -47,10 +47,13 @@ class _LoginPageState extends State<LoginPage> {
     return passCrypted;
   }
 
-  void saveData(String id, String user, String password) {
+  void saveData(
+      String id, String user, String password, String email, String photo) {
     data.setData("id", id);
     data.setData("username", user);
     data.setData("password", password);
+    data.setData("email", email);
+    data.setData("profile_photo", photo);
   }
 
   void loginAction(BuildContext context) async {
@@ -61,12 +64,13 @@ class _LoginPageState extends State<LoginPage> {
       bool checked = await checkLogin();
       if (checked) {
         List<List> list = await selectUserData(username, password);
+
         String id = "";
         if (list.isNotEmpty) {
           id = list[0][0].toString();
         }
 
-        saveData(id, username, password);
+        saveData(id, username, password, list[0][2], list[0][4]);
         Navigator.pushNamed(context, '/home');
       } else {
         showAnimatedDialog(

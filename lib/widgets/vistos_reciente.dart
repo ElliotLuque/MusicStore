@@ -16,12 +16,12 @@ class _VistosRecientementeState extends State<VistosRecientemente> {
   Future<List<List<dynamic>>> selectDatos() async {
     return await Conexion.connection.query(
         ''' SELECT DISTINCT ON (producto.id_producto) producto.id_producto,imagen,fecha_vista
-FROM producto
-	RIGHT JOIN imagenes_producto USING (id_producto)
-	LEFT JOIN historial_producto USING (id_producto)
-WHERE historial_producto.id_usuario = @user
-GROUP BY producto.id_producto, producto.nombre, producto.fabricante, producto.descripcion, fecha_vista, producto.precio_actual, imagenes_producto.imagen, imagenes_producto.id_imagen
-LIMIT 4;''',
+            FROM producto
+              RIGHT JOIN imagenes_producto USING (id_producto)
+              LEFT JOIN historial_producto USING (id_producto)
+            WHERE historial_producto.id_usuario = @user
+            GROUP BY producto.id_producto, producto.nombre, producto.fabricante, producto.descripcion, fecha_vista, producto.precio_actual, imagenes_producto.imagen, imagenes_producto.id_imagen
+            LIMIT 4;''',
         substitutionValues: {"user": await data.getData("id")});
   }
 
@@ -55,7 +55,7 @@ LIMIT 4;''',
                               mainAxisSpacing: 20),
                       itemCount: resultados.data.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return productoVisto(resultados.data[index][1]);
+                        return productoVistoCard(resultados.data[index][1]);
                       },
                     ),
                   ),
@@ -70,7 +70,7 @@ LIMIT 4;''',
         });
   }
 
-  Widget productoVisto(String img) => Card(
+  Widget productoVistoCard(String img) => Card(
         shadowColor: const Color.fromRGBO(0, 0, 0, 0.15),
         child: Container(
           decoration: BoxDecoration(

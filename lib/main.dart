@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:music_store_flutter/controller/secure_storage.dart';
+import 'package:music_store_flutter/views/history_page.dart';
 import 'package:music_store_flutter/views/login_page.dart';
-import 'package:music_store_flutter/views/main_page.dart';
+import 'package:music_store_flutter/views/main_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:music_store_flutter/database/conexion.dart';
 import 'package:music_store_flutter/views/product_page.dart';
@@ -46,8 +47,9 @@ class _MyAppState extends State<MyApp> {
                       unselectedItemColor: Color(0xFFC4C4C4))),
               initialRoute: '/home',
               routes: {
+                '/history': (context) => const HistoryPage(),
                 '/splash': (context) => const SplashScreen(),
-                '/home': (context) => const HomePage(),
+                '/home': (context) => const AppLauncher(),
                 '/login': (context) => const LoginPage(),
                 '/register': (context) => const RegisterPage(),
                 ProductPage.route: (context) => const ProductPage(),
@@ -67,10 +69,11 @@ class _MyAppState extends State<MyApp> {
                       unselectedItemColor: Color(0xFFC4C4C4))),
               initialRoute: '/login',
               routes: {
+                '/history': (context) => const HistoryPage(),
                 '/splash': (context) => const SplashScreen(),
                 '/login': (context) => const LoginPage(),
                 '/register': (context) => const RegisterPage(),
-                '/home': (context) => const HomePage(),
+                '/home': (context) => const AppLauncher(),
                 ProductPage.route: (context) => const ProductPage(),
               },
             );
