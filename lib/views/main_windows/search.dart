@@ -49,6 +49,11 @@ class _SearchPageState extends State<SearchPage> {
   bool selected = false;
   List<List<dynamic>> encontrados = [];
 
+  Future<void> refrescar(List<List<dynamic>> list) async {
+    filterName(buscarController.text, list);
+    setState(() {});
+  }
+
   void filterName(String query, List<List<dynamic>> todos) {
     encontrados = todos;
     List<List<dynamic>> resultados = [];
@@ -56,8 +61,9 @@ class _SearchPageState extends State<SearchPage> {
       resultados = todos;
     } else {
       resultados = todos
-          .where((product) =>
-              (product[7]).toLowerCase().contains(query.toLowerCase()))
+          .where((product) => (product[8] + product[7])
+              .toLowerCase()
+              .contains(query.toLowerCase()))
           .toList();
     }
     setState(() {
@@ -213,43 +219,52 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 15),
-                            SizedBox(
-                              height: 587,
-                              child: GridView.builder(
-                                physics: const BouncingScrollPhysics(
-                                    parent: AlwaysScrollableScrollPhysics()),
-                                gridDelegate:
-                                    const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 300,
-                                  childAspectRatio: 1.8 / 2.7,
-                                  crossAxisSpacing: 16,
-                                  mainAxisSpacing: 16,
+                            const SizedBox(height: 1),
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: SizedBox(
+                                height: 578,
+                                child: RefreshIndicator(
+                                  color: const Color(0xFF9E7EE2),
+                                  onRefresh: () => refrescar(datosResult.data),
+                                  child: GridView.builder(
+                                    physics: const BouncingScrollPhysics(
+                                        parent:
+                                            AlwaysScrollableScrollPhysics()),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 300,
+                                      childAspectRatio: 1.8 / 2.7,
+                                      crossAxisSpacing: 16,
+                                      mainAxisSpacing: 16,
+                                    ),
+                                    itemCount: encontrados.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      if (encontrados[index][4] == null) {
+                                        return productCard(
+                                          encontrados[index][0],
+                                          encontrados[index][1],
+                                          encontrados[index][2],
+                                          encontrados[index][3],
+                                          0,
+                                          encontrados[index][5],
+                                          encontrados[index][6],
+                                        );
+                                      } else {
+                                        return productCard(
+                                          encontrados[index][0],
+                                          encontrados[index][1],
+                                          encontrados[index][2],
+                                          encontrados[index][3],
+                                          encontrados[index][4],
+                                          encontrados[index][5],
+                                          encontrados[index][6],
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ),
-                                itemCount: encontrados.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  if (encontrados[index][4] == null) {
-                                    return productCard(
-                                      encontrados[index][0],
-                                      encontrados[index][1],
-                                      encontrados[index][2],
-                                      encontrados[index][3],
-                                      0,
-                                      encontrados[index][5],
-                                      encontrados[index][6],
-                                    );
-                                  } else {
-                                    return productCard(
-                                      encontrados[index][0],
-                                      encontrados[index][1],
-                                      encontrados[index][2],
-                                      encontrados[index][3],
-                                      encontrados[index][4],
-                                      encontrados[index][5],
-                                      encontrados[index][6],
-                                    );
-                                  }
-                                },
                               ),
                             )
                           ],
@@ -293,8 +308,8 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 Center(
                   child: SizedBox(
-                    height: 180,
-                    width: 160,
+                    height: 155,
+                    width: 130,
                     child: CachedNetworkImage(
                       imageUrl: image,
                     ),

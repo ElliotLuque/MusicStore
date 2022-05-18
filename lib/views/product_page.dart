@@ -101,9 +101,21 @@ class _ProductPageState extends State<ProductPage> {
           });
     }
 
-    Future<void> addToCart(int cantidad, int carro) async {
+    Future<void> addNewToCart(int cantidad, int carro) async {
       await Conexion.connection.query('''INSERT INTO producto_carro_compra
                                          VALUES (@carro, @prod, @cantidad)''',
+          substitutionValues: {
+            "carro": carro,
+            "prod": arguments.idProd,
+            "cantidad": cantidad,
+          });
+    }
+
+    Future<void> addToCart(int cantidad, int carro) async {
+      await Conexion.connection.query('''UPDATE producto_carro_compra
+                                         SET cantidad = @cantidad
+                                         WHERE id_producto = @prod 
+                                         AND id_carro = @carro)''',
           substitutionValues: {
             "carro": carro,
             "prod": arguments.idProd,
@@ -494,11 +506,24 @@ class _ProductPageState extends State<ProductPage> {
                                                         ),
                                                         GestureDetector(
                                                           onTap: () => {
-                                                            addToCart(
-                                                                cantProducto,
-                                                                carroSnap
-                                                                        .data[0]
-                                                                    [0]),
+                                                            if (carroSnap.data
+                                                                    .length <=
+                                                                0)
+                                                              {
+                                                                addNewToCart(
+                                                                    cantProducto,
+                                                                    carroSnap
+                                                                            .data[
+                                                                        0][0])
+                                                              }
+                                                            else
+                                                              {
+                                                                addToCart(
+                                                                    cantProducto,
+                                                                    carroSnap
+                                                                            .data[
+                                                                        0][0])
+                                                              },
                                                             showFlash(
                                                                 context:
                                                                     context,
@@ -521,7 +546,7 @@ class _ProductPageState extends State<ProductPage> {
                                                                             50,
                                                                         decoration: BoxDecoration(
                                                                             color:
-                                                                                const Color(0xFF9272D6),
+                                                                                const Color(0xFF36CF4A),
                                                                             borderRadius: BorderRadius.circular(20),
                                                                             boxShadow: const [
                                                                               BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.25), offset: Offset(2, 2), blurRadius: 4.0)

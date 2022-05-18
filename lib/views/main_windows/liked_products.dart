@@ -33,6 +33,11 @@ Future<void> removeFavorite(int idProd) async {
 }
 
 class _LikedProductsPageState extends State<LikedProductsPage> {
+  Future<void> refrescar() async {
+    selectDatos();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<List<dynamic>>>(
@@ -70,36 +75,40 @@ class _LikedProductsPageState extends State<LikedProductsPage> {
                   SizedBox(
                     height: 665,
                     width: 360,
-                    child: ListView.separated(
-                      physics: const BouncingScrollPhysics(
-                          parent: AlwaysScrollableScrollPhysics()),
-                      itemCount: snapshot.data.length,
-                      separatorBuilder: (BuildContext context, int index) {
-                        if (snapshot.data[index][4] == null) {
-                          return productCardFav(
-                            snapshot.data[index][0],
-                            snapshot.data[index][1],
-                            snapshot.data[index][2],
-                            snapshot.data[index][3],
-                            0,
-                            snapshot.data[index][5],
-                            snapshot.data[index][6],
-                          );
-                        } else {
-                          return productCardFav(
-                            snapshot.data[index][0],
-                            snapshot.data[index][1],
-                            snapshot.data[index][2],
-                            snapshot.data[index][3],
-                            snapshot.data[index][4],
-                            snapshot.data[index][5],
-                            snapshot.data[index][6],
-                          );
-                        }
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        return const SizedBox(height: 0);
-                      },
+                    child: RefreshIndicator(
+                      color: const Color(0xFF9E7EE2),
+                      onRefresh: () => refrescar(),
+                      child: ListView.separated(
+                        physics: const BouncingScrollPhysics(
+                            parent: AlwaysScrollableScrollPhysics()),
+                        itemCount: snapshot.data.length,
+                        separatorBuilder: (BuildContext context, int index) {
+                          if (snapshot.data[index][4] == null) {
+                            return productCardFav(
+                              snapshot.data[index][0],
+                              snapshot.data[index][1],
+                              snapshot.data[index][2],
+                              snapshot.data[index][3],
+                              0,
+                              snapshot.data[index][5],
+                              snapshot.data[index][6],
+                            );
+                          } else {
+                            return productCardFav(
+                              snapshot.data[index][0],
+                              snapshot.data[index][1],
+                              snapshot.data[index][2],
+                              snapshot.data[index][3],
+                              snapshot.data[index][4],
+                              snapshot.data[index][5],
+                              snapshot.data[index][6],
+                            );
+                          }
+                        },
+                        itemBuilder: (BuildContext context, int index) {
+                          return const SizedBox(height: 0);
+                        },
+                      ),
                     ),
                   )
                 ],
