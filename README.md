@@ -1,16 +1,12 @@
-# music_store_flutter
+# Music Store
 
-A new Flutter project.
+Proyecto final de 2º DAM
 
-## Getting Started
+## Resumen
 
-This project is a starting point for a Flutter application.
+Este proyecto es el resultado del desarrollo del TFG de
+Desarrollo de Aplicaciones Multiplataforma, realizado en el curso 2020-22
 
-A few resources to get you started if this is your first Flutter project:
+Realizado en Dart/Flutter con PostgreSQL y Google Cloud Platform
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Elliot Luque Pascual - 2º DAM
