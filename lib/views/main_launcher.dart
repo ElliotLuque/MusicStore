@@ -33,50 +33,47 @@ class _AppLauncherState extends State<AppLauncher> {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: Color(0xFFFBF8F8),
         systemNavigationBarIconBrightness: Brightness.dark));
-    return WillPopScope(
-      onWillPop: () => Future.value(false),
-      child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            iconSize: 23,
-            currentIndex: currentSelectedIndexNavBar,
-            onTap: onNavBarItemTapped,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                ),
-                label: "Home",
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          iconSize: 23,
+          currentIndex: currentSelectedIndexNavBar,
+          onTap: onNavBarItemTapped,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
               ),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.search,
-                  ),
-                  label: "Buscar"),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.shopping_cart_outlined,
-                  ),
-                  label: "Carrito"),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.favorite,
-                  ),
-                  label: "Guardados"),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.person,
-                  ),
-                  label: "Perfil"),
-            ],
-          ),
-          body: IndexedStack(
-            index: currentSelectedIndexNavBar,
-            children: screens,
-          )),
-    );
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.search,
+                ),
+                label: "Buscar"),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.shopping_cart_outlined,
+                ),
+                label: "Carrito"),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.favorite,
+                ),
+                label: "Guardados"),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.person,
+                ),
+                label: "Perfil"),
+          ],
+        ),
+        body: IndexedStack(
+          index: currentSelectedIndexNavBar,
+          children: screens,
+        ));
   }
 }

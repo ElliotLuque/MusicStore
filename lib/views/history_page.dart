@@ -94,7 +94,15 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             );
           } else {
-            return const Text("No tienes productos guardados");
+            return const Scaffold(
+                body: Center(
+                    child: Text(
+              "No has visto ningún producto aún",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            )));
           }
         });
   }

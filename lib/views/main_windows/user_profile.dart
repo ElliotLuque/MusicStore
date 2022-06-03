@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:music_store_flutter/controller/secure_storage.dart';
+import 'package:music_store_flutter/views/login_page.dart';
 import 'package:music_store_flutter/widgets/dialog_message.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -19,7 +20,8 @@ void logout(BuildContext context) {
   data.deleteData("email");
   data.deleteData("profile_photo");
 
-  Navigator.pushNamed(context, '/login');
+  Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (context) => const LoginPage()));
 }
 
 void navToHistoryPage(BuildContext context) {

@@ -81,7 +81,7 @@ class _LikedProductsPageState extends State<LikedProductsPage> {
                       child: ListView.separated(
                         physics: const BouncingScrollPhysics(
                             parent: AlwaysScrollableScrollPhysics()),
-                        itemCount: snapshot.data.length,
+                        itemCount: snapshot.data.length + 1,
                         separatorBuilder: (BuildContext context, int index) {
                           if (snapshot.data[index][4] == null) {
                             return productCardFav(
@@ -140,6 +140,16 @@ class _LikedProductsPageState extends State<LikedProductsPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 295.5),
+                  GestureDetector(
+                    onTap: () => refrescar(),
+                    child: const Center(
+                        child: Text(
+                      "No tienes productos guardados",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+                    )),
+                  )
                 ],
               ),
             );

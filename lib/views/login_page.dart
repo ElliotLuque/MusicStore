@@ -32,6 +32,18 @@ class _LoginPageState extends State<LoginPage> {
         substitutionValues: {"nombre": nombre, "pass": pass});
   }
 
+  Future<void> deleteUserCart() async {
+    await Conexion.connection.query('''DELETE FROM carro 
+        WHERE id_usuario = @usuario''',
+        substitutionValues: {"usuario": await data.getData("id")});
+  }
+
+  Future<void> insertUserCart() async {
+    await Conexion.connection.query('''INSERT INTO carro (id_carro, id_usuario)
+                  VALUES (DEFAULT, @usuario)''',
+        substitutionValues: {"usuario": await data.getData("id")});
+  }
+
   Future<bool> checkLogin() async {
     List<List> list = await selectUserData(
         userController.text, encryptPass(passController.text));
@@ -69,8 +81,14 @@ class _LoginPageState extends State<LoginPage> {
         if (list.isNotEmpty) {
           id = list[0][0].toString();
         }
-
-        saveData(id, username, password, list[0][2], list[0][4]);
+        if (list[0][4] != null) {
+          saveData(id, username, password, list[0][2], list[0][4]);
+        } else {
+          saveData(id, username, password, list[0][2],
+              "https://storage.googleapis.com/music-store-flutter/Profile_images/user_default.png");
+        }
+        await deleteUserCart();
+        await insertUserCart();
         Navigator.pushNamed(context, '/home');
       } else {
         showAnimatedDialog(
